@@ -1,4 +1,4 @@
-// webpack.config.js
+// webpack.config.js React
 const path = require('path');
 
 module.exports = {
