@@ -1,4 +1,4 @@
-// Front-end (using Fetch API) React
+// Front-end (using Fetch API)
 fetch('/api/users')
   .then(response => response.json())
   .then(users => {
@@ -11,7 +11,7 @@ fetch('/api/users')
     });
   });
 
-// Back-end (using Node.js runtime V8 and Express.js Framework)
+// Back-end
 const express = require('express');
 const app = express();
 
