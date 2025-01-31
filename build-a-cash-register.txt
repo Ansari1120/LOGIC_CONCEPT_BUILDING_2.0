@@ -1,0 +1,158 @@
+** start of undefined **
+
+<html>
+<head>
+
+</head>
+<body id="body-main">
+
+<h1 id="heading-main">Cash checker</h1>
+  <input 
+    name="fsrch"
+    id="cash" 
+    placeholder="Enter your text" 
+  />
+  <button id="purchase-btn">purchase</button>
+
+  <div id="change-due"/>
+
+<script src="script.js">
+</script>
+</body>
+
+</html>
+
+** end of undefined **
+
+** start of undefined **
+
+// Global variables
+let price = 19.5;
+let cid = [
+  ["PENNY", 0.5],
+  ["NICKEL", 0],
+  ["DIME", 0],
+  ["QUARTER", 0],
+  ["ONE", 0],
+  ["FIVE", 0],
+  ["TEN", 0],
+  ["TWENTY", 0],
+  ["ONE HUNDRED", 0],
+];
+
+// Currency unit values
+const UNIT_VALUES = {
+  "PENNY": 0.01,
+  "NICKEL": 0.05,
+  "DIME": 0.1,
+  "QUARTER": 0.25,
+  "ONE": 1,
+  "FIVE": 5,
+  "TEN": 10,
+  "TWENTY": 20,
+  "ONE HUNDRED": 100
+};
+
+// Event listener for the purchase button
+document.getElementById("purchase-btn").addEventListener("click", function () {
+    const cash = parseFloat(document.getElementById("cash").value);
+
+    if (cash < price) {
+        alert("Customer does not have enough money to purchase the item");
+        return;
+    }
+
+    if (cash === price) {
+        document.getElementById("change-due").innerText = "No change due - customer paid with exact cash";
+        return;
+    }
+
+    const changeResult = calculateChange(cash - price, cid);
+    if (changeResult.status === "INSUFFICIENT_FUNDS") {
+        document.getElementById("change-due").innerText = "Status: INSUFFICIENT_FUNDS";
+    } else if (changeResult.status === "CLOSED") {
+        document.getElementById("change-due").innerText = `Status: CLOSED ${formatChange(changeResult.change)}`;
+    } else {
+        document.getElementById("change-due").innerText = `Status: OPEN ${formatChange(changeResult.change)}`;
+    }
+});
+
+// Function to calculate change
+function calculateChange(change, cid) {
+    const currencyUnits = [
+        ["PENNY", 0.01],
+        ["NICKEL", 0.05],
+        ["DIME", 0.1],
+        ["QUARTER", 0.25],
+        ["ONE", 1],
+        ["FIVE", 5],
+        ["TEN", 10],
+        ["TWENTY", 20],
+        ["ONE HUNDRED", 100]
+    ];
+
+    let totalCID = cid.reduce((sum, denomination) => sum + denomination[1], 0).toFixed(2);
+    let changeArray = [];
+
+    if (parseFloat(totalCID) < change) {
+        return { status: "INSUFFICIENT_FUNDS", change: [] };
+    }
+
+    if (parseFloat(totalCID) === change) {
+        // Ensure the returned change is sorted from highest to lowest
+        return { status: "CLOSED", change: cid.filter(denom => denom[1] > 0).reverse() };
+    }
+
+    for (let i = currencyUnits.length - 1; i >= 0; i--) {
+        let [unit, unitValue] = currencyUnits[i];
+        let cidValue = cid[i][1];
+        let amount = 0;
+
+        while (change >= unitValue && cidValue >= unitValue) {
+            change = (change - unitValue).toFixed(2); // Avoid floating-point issues
+            cidValue -= unitValue;
+            amount += unitValue;
+        }
+
+        if (amount > 0) {
+            changeArray.push([unit, amount]);
+        }
+    }
+
+    if (change > 0) {
+        return { status: "INSUFFICIENT_FUNDS", change: [] };
+    }
+
+    return { status: "OPEN", change: changeArray };
+}
+
+
+
+// Function to format change array
+function formatChange(changeArray) {
+    return changeArray.map(c => `${c[0]}: $${c[1].toFixed(2)}`).join(" ");
+}
+
+// Example data for testing
+price = 19.5;
+cid = [
+    ["PENNY", 1.01],
+    ["NICKEL", 2.05],
+    ["DIME", 3.1],
+    ["QUARTER", 4.25],
+    ["ONE", 90],
+    ["FIVE", 55],
+    ["TEN", 20],
+    ["TWENTY", 60],
+    ["ONE HUNDRED", 100]
+];
+
+
+** end of undefined **
+
+** start of undefined **
+
+
+
+** end of undefined **
+
